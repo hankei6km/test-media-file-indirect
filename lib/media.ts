@@ -1,4 +1,5 @@
 import { basename } from 'path';
+const apiRes = require('./$items.json');
 
 export type Content = {
   media: {
@@ -10,7 +11,6 @@ export type Content = {
 export type Media = {
   fileName: string;
   rawUrl: string;
-  queryString: string;
   width: number;
   height: number;
 };
@@ -37,35 +37,59 @@ export async function getMediaItems(
       throw err.name;
     });
     if (r.ok) {
-      const q = new URLSearchParams('');
-      Object.entries(reqQuery).forEach(([k, v]) => {
-        if (k !== 'id') {
-          q.append(k, typeof v === 'string' ? v : v.join(','));
-        }
-      });
-      const tmp = q.toString();
-      const qs = `${tmp !== '' ? `?${tmp}` : ''}`;
-      return (await r.json()).contents.map((content: Content) => {
+      const items = (await r.json()).contents.map((content: Content) => {
         const fileName = basename(new URL(content.media.url).pathname);
         return {
           fileName: fileName,
           rawUrl: content.media.url,
-          queryString: qs,
           width: content.media.width,
           height: content.media.height
         };
       });
+      return items;
     }
   }
   return [];
 }
 
+export async function getMediaItemsFromFile(
+  reqQuery: Record<string, string | string[]>
+): Promise<Media[]> {
+  const items = (apiRes.contents as Content[]).map(({ media }) => {
+    const fileName = basename(new URL(media.url).pathname);
+    return {
+      fileName: fileName,
+      rawUrl: media.url,
+      width: media.width,
+      height: media.height
+    };
+  });
+  const fileName = reqQuery.id;
+  if (fileName) {
+    return items.filter((item: Media) => item.fileName === fileName);
+  }
+  return items;
+}
+
 export async function mediaUrl(
   reqQuery: Record<string, string | string[]>
 ): Promise<string> {
-  const items = await getMediaItems(reqQuery);
+  let items: Media[] = await getMediaItemsFromFile(reqQuery);
   if (items && items.length > 0) {
-    return `${items[0].rawUrl}${items[0].queryString}`;
+    console.log(`hit: ${reqQuery.id}`);
+  } else {
+    items = await getMediaItems(reqQuery);
+  }
+  if (items && items.length > 0) {
+    const q = new URLSearchParams('');
+    Object.entries(reqQuery).forEach(([k, v]) => {
+      if (k !== 'id') {
+        q.append(k, typeof v === 'string' ? v : v.join(','));
+      }
+    });
+    const tmp = q.toString();
+    const qs = `${tmp !== '' ? `?${tmp}` : ''}`;
+    return `${items[0].rawUrl}${qs}`;
   }
   return '';
 }
