@@ -1,2 +1,3 @@
 # test-media-file-indirect
-Created with CodeSandbox
+
+microCMS のメディアファイルを間接的に利用するための実験的な実装のリポジトリ。
