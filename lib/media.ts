@@ -11,6 +11,8 @@ export type Media = {
   fileName: string;
   rawUrl: string;
   queryString: string;
+  width: number;
+  height: number;
 };
 
 export async function getMediaItems(
@@ -48,7 +50,9 @@ export async function getMediaItems(
         return {
           fileName: fileName,
           rawUrl: content.media.url,
-          queryString: qs
+          queryString: qs,
+          width: content.media.width,
+          height: content.media.height
         };
       });
     }

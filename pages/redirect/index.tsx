@@ -22,7 +22,7 @@ const WithStaticProps = ({ items }: Props) => (
 
 export const getStaticProps: GetStaticProps = async () => {
   const items: Media[] = await getMediaItems({});
-  console.log(items);
+  // console.log(items);
   return { props: { items } };
 };
 

@@ -9,16 +9,29 @@ type Props = {
 };
 
 const ListItem = ({ data, apiPath }: Props) => {
+  const width =
+    data.width > data.height
+      ? 400
+      : Math.round((data.width * 400) / data.height);
+  const height =
+    data.width > data.height
+      ? Math.round((data.height * 400) / data.width)
+      : 400;
+
   const q = new URLSearchParams('');
-  q.append('w', '400');
+  q.append('w', `${width}`);
+  q.append('h', `${height}`);
+
   const redirectUrl = `${apiPath}/${data.fileName}${data.queryString}`;
   const redirectUrlApiParams = `${apiPath}/${data.fileName}?${q.toString()}`;
   const rawUrl = `${data.rawUrl}${data.queryString}`;
+
   return (
     <>
       <div>
         <img
-          width="400"
+          width={width}
+          height={height}
           src={redirectUrlApiParams}
           alt="リダイレクト版の表示"
         />
