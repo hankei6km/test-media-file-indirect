@@ -15,6 +15,11 @@ const IndexPage = () => (
           <a>フォワードバージョン</a>
         </Link>
       </li>
+      <li>
+        <Link href="/direct">
+          <a>参考: 生の URL バージョン</a>
+        </Link>
+      </li>
     </ul>
   </Layout>
 );

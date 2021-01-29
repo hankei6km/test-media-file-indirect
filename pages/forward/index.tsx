@@ -11,7 +11,7 @@ const WithStaticProps = ({ items }: Props) => (
   <Layout title="test media file indirect: forward version">
     <h1>フォワードで画像を表示</h1>
     <p> microCMS のメディアファイル(画像)をフォワード経由で表示。</p>
-    <List items={items} apiPath={'/api/image-forward'} />
+    <List kind={'forward'} items={items} />
     <p>
       <Link href="/">
         <a>Go home</a>

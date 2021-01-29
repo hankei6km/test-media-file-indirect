@@ -27,6 +27,10 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => (
         <Link href="/forward">
           <a>フォワードバージョン</a>
         </Link>
+        |{' '}
+        <Link href="/direct">
+          <a>生の URL バージョン:</a>
+        </Link>
       </nav>
     </header>
     {children}

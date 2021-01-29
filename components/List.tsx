@@ -2,12 +2,13 @@ import * as React from 'react';
 import ListItem from './ListItem';
 import { Media } from '../lib/media';
 
+export type ListKind = 'direct' | 'redirect' | 'forward';
 type Props = {
+  kind: ListKind;
   items: Media[];
-  apiPath: string;
 };
 
-const List = ({ items, apiPath }: Props) => (
+const List = ({ kind, items }: Props) => (
   <ul
     style={{
       listStyle: 'none'
@@ -18,7 +19,7 @@ const List = ({ items, apiPath }: Props) => (
   >
     {items.map((item) => (
       <li key={item.rawUrl}>
-        <ListItem data={item} apiPath={apiPath} />
+        <ListItem kind={kind} data={item} />
       </li>
     ))}
   </ul>
