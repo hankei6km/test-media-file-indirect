@@ -8,10 +8,10 @@ import List from '../../components/List';
 type Props = { items: Media[] };
 
 const WithStaticProps = ({ items }: Props) => (
-  <Layout title="test media file indirect: redirect version">
-    <h1>リダイレクトで画像を表示</h1>
-    <p> microCMS のメディアファイル(画像)をリダイレクト経由で表示。</p>
-    <List kind={'redirect'} items={items} />
+  <Layout title="test media file indirect: raw url version">
+    <h1>生の URL で画像を表示</h1>
+    <p> microCMS のメディアファイル(画像)を生の URL を利用して表示</p>
+    <List kind={'direct'} items={items} />
     <p>
       <Link href="/">
         <a>Go home</a>

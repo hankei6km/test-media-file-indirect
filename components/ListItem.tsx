@@ -1,14 +1,21 @@
 import React from 'react';
 // import Link from 'next/link';
+import { ListKind } from './List';
 
 import { Media } from '../lib/media';
 
 type Props = {
+  kind: ListKind;
   data: Media;
-  apiPath: string;
 };
 
-const ListItem = ({ data, apiPath }: Props) => {
+const ListItem = ({ kind, data }: Props) => {
+  const apiPath =
+    kind === 'direct'
+      ? ''
+      : kind === 'redirect'
+      ? '/api/image-redirect'
+      : '/api/image-forward';
   const width =
     data.width > data.height
       ? 400
@@ -22,9 +29,10 @@ const ListItem = ({ data, apiPath }: Props) => {
   q.append('w', `${width}`);
   q.append('h', `${height}`);
 
-  const redirectUrl = `${apiPath}/${data.fileName}`;
-  const redirectUrlApiParams = `${apiPath}/${data.fileName}?${q.toString()}`;
   const rawUrl = `${data.rawUrl}`;
+  const indirectPath = `${apiPath}/${data.fileName}`;
+  const imageUrl = kind === 'direct' ? data.rawUrl : indirectPath;
+  const imageUrlResized = `${imageUrl}?${q.toString()}`;
 
   return (
     <>
@@ -32,8 +40,8 @@ const ListItem = ({ data, apiPath }: Props) => {
         <img
           width={width}
           height={height}
-          src={redirectUrlApiParams}
-          alt="リダイレクト版の表示"
+          src={imageUrlResized}
+          alt="サンプルの表示"
         />
       </div>
       <div>
@@ -42,13 +50,17 @@ const ListItem = ({ data, apiPath }: Props) => {
           <dd>
             <a href={rawUrl}>{rawUrl}</a>
           </dd>
-          <dt>リダイレクト Pathname:</dt>
+          {kind !== 'direct' && (
+            <>
+              <dt>間接的 URL(path):</dt>
+              <dd>
+                <a href={indirectPath}>{indirectPath}</a>
+              </dd>
+            </>
+          )}
+          <dt>サイズ変更パラメータ付き URL(path):</dt>
           <dd>
-            <a href={redirectUrl}>{redirectUrl}</a>
-          </dd>
-          <dt>リダイレクト Pathname(画像APIパラメータ付き):</dt>
-          <dd>
-            <a href={redirectUrlApiParams}>{redirectUrlApiParams}</a>
+            <a href={imageUrlResized}>{imageUrlResized}</a>
           </dd>
         </dl>
       </div>
