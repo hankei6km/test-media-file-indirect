@@ -10,13 +10,21 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         // https://github.com/vercel/next.js/discussions/15453#discussioncomment-41926
         const header = {
           'Content-Type': img.headers.get('Content-Type'),
-          'Content-Length': img.headers.get('Content-Length')
+          'Content-Length': img.headers.get('Content-Length'),
+          age: img.headers.get('age'),
+          'cache-control': img.headers.get('cache-control')
         };
-        if (header['Content-Type'] && header['Content-Length']) {
-          // console.log(header['Content-Type'], header['Content-Length']);
-          res.writeHead(200, {
+        if (
+          header['Content-Type'] &&
+          header['Content-Length'] &&
+          header['age'] &&
+          header['cache-control']
+        ) {
+          res.writeHead(img.status, {
             'Content-Type': header['Content-Type'],
-            'Content-Length': header['Content-Length']
+            'Content-Length': header['Content-Length'],
+            age: header['age'],
+            'cache-control': header['cache-control']
           });
           // 定義と作成されるインスタンスの整合性がとれないのでとりあえず any
           // 定義では pipeTo だが実際のインスタンスは pipe.
