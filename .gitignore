@@ -23,6 +23,9 @@ yarn-error.log*
 # aspida
 /types/client/$*
 
+# media items
+/lib/$*
+
 # codesandbox
 /.codesandbox
 

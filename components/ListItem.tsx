@@ -22,9 +22,9 @@ const ListItem = ({ data, apiPath }: Props) => {
   q.append('w', `${width}`);
   q.append('h', `${height}`);
 
-  const redirectUrl = `${apiPath}/${data.fileName}${data.queryString}`;
+  const redirectUrl = `${apiPath}/${data.fileName}`;
   const redirectUrlApiParams = `${apiPath}/${data.fileName}?${q.toString()}`;
-  const rawUrl = `${data.rawUrl}${data.queryString}`;
+  const rawUrl = `${data.rawUrl}`;
 
   return (
     <>

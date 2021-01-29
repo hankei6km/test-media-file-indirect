@@ -2,9 +2,10 @@
   "name": "test-media-file-indirect",
   "version": "1.0.0",
   "scripts": {
-    "dev": "next",
-    "build": "next build",
-    "start": "next start",
+    "items:build": "sh scripts/getMediaItems.sh",
+    "dev": "sh scripts/getMediaItems.sh && next",
+    "build": "sh scripts/getMediaItems.sh && next build",
+    "start": "sh scripts/getMediaItems.sh && next start",
     "type-check": "tsc"
   },
   "dependencies": {
