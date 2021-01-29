@@ -26,6 +26,7 @@ export async function getMediaItems(
     throw new Error('env vars error: see server log');
   } else {
     const q = new URLSearchParams('');
+    q.append('limit', '1000');
     q.append('fields', 'media');
     if (reqQuery.id) {
       q.append('filters', `media[contains]${reqQuery.id}`);
