@@ -11,6 +11,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         const header = {
           'Content-Type': img.headers.get('Content-Type'),
           'Content-Length': img.headers.get('Content-Length'),
+          // この辺をきちんと呼んだ方が良い https://vercel.com/docs/edge-network/caching
           // age: img.headers.get('age'),
           'cache-control': img.headers.get('cache-control')
         };
