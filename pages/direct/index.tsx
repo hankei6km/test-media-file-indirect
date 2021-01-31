@@ -21,7 +21,12 @@ const WithStaticProps = ({ items }: Props) => (
 );
 
 export const getStaticProps: GetStaticProps = async () => {
-  const items: Media[] = await getMediaItems({});
+  const items: Media[] = await getMediaItems([
+    '2020-11-03-yoko1.jpg',
+    '2020-11-03-tate2.jpg',
+    '2020-11-03-yoko2.jpg',
+    '2010-11-03-tate1.jpg'
+  ]);
   return { props: { items } };
 };
 
