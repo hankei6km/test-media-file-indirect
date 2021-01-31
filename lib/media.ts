@@ -15,9 +15,7 @@ export type Media = {
   height: number;
 };
 
-export async function getMediaItems(
-  reqQuery: Record<string, string | string[]>
-): Promise<Media[]> {
+export async function getMediaItems(files: string[]): Promise<Media[]> {
   if (process.env.GET_API_KEY === undefined) {
     console.error('$GET_API_KEY not defined');
     throw new Error('env vars error: see server log');
@@ -28,8 +26,8 @@ export async function getMediaItems(
     const q = new URLSearchParams('');
     q.append('limit', '1000');
     q.append('fields', 'media');
-    if (reqQuery.id) {
-      q.append('filters', `media[contains]${reqQuery.id}`);
+    if (files.length > 0) {
+      q.append('filters', `media[equals]${files.join('[or]media[equals]')}`);
     }
     const r = await fetch(`${process.env.API_BASE_URL}media?${q.toString()}`, {
       method: 'GET',
@@ -53,9 +51,7 @@ export async function getMediaItems(
   return [];
 }
 
-export async function getMediaItemsFromFile(
-  reqQuery: Record<string, string | string[]>
-): Promise<Media[]> {
+export async function getMediaItemsFromFile(files: string[]): Promise<Media[]> {
   const items = (apiRes.contents as Content[]).map(({ media }) => {
     const fileName = basename(new URL(media.url).pathname);
     return {
@@ -65,9 +61,10 @@ export async function getMediaItemsFromFile(
       height: media.height
     };
   });
-  const fileName = reqQuery.id;
-  if (fileName) {
-    return items.filter((item: Media) => item.fileName === fileName);
+  if (files.length > 0) {
+    return items.filter((item: Media) =>
+      files.some((file) => file === item.fileName)
+    );
   }
   return items;
 }
@@ -75,11 +72,15 @@ export async function getMediaItemsFromFile(
 export async function mediaUrl(
   reqQuery: Record<string, string | string[]>
 ): Promise<string> {
-  let items: Media[] = await getMediaItemsFromFile(reqQuery);
+  let files: string[] = [];
+  if (reqQuery.id) {
+    files = files.concat(reqQuery.id);
+  }
+  let items: Media[] = await getMediaItemsFromFile(files);
   if (items && items.length > 0) {
     console.log(`hit: ${reqQuery.id}`);
   } else {
-    items = await getMediaItems(reqQuery);
+    items = await getMediaItems(files);
   }
   if (items && items.length > 0) {
     const q = new URLSearchParams('');
