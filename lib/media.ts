@@ -76,7 +76,10 @@ export async function mediaUrl(
   if (reqQuery.id) {
     files = files.concat(reqQuery.id);
   }
-  let items: Media[] = await getMediaItemsFromFile(files);
+  let items: Media[] = [];
+  if (process.env.USE_GET_API_FORCE !== 'true') {
+    items = await getMediaItemsFromFile(files);
+  }
   if (items && items.length > 0) {
     console.log(`hit: ${reqQuery.id}`);
   } else {
