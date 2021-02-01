@@ -76,12 +76,23 @@ export async function mediaUrl(
   if (reqQuery.id) {
     files = files.concat(reqQuery.id);
   }
-  let items: Media[] = await getMediaItemsFromFile(files);
+  let items: Media[] = [];
+  const st = Date.now();
+  console.log(`GET MEDIA ITEMS:START: ${st}`);
+  if (process.env.USE_GET_API_FORCE !== 'true') {
+    items = await getMediaItemsFromFile(files);
+  }
   if (items && items.length > 0) {
-    console.log(`hit: ${reqQuery.id}`);
+    console.log(`GET MEDIA ITEMS:HIT : ${reqQuery.id}`);
   } else {
+    console.log(`GET MEDIA ITEMS:FALLBACK FROM NETWORK : ${reqQuery.id}`);
     items = await getMediaItems(files);
   }
+  const et = Date.now();
+  console.log(`GET MEDIA ITEMS:START: ${st}`);
+  console.log(`GET MEDIA ITEMS:END  : ${et}`);
+  console.log(`GET MEDIA ITEMS:ELAPSED TIME: ${(et - st) / 1000} sec.`);
+  console.log(`GET MEDIA ITEMS:LENGTH: ${items ? items.length : 0}`);
   if (items && items.length > 0) {
     const q = new URLSearchParams('');
     Object.entries(reqQuery).forEach(([k, v]) => {
