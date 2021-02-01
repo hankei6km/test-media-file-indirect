@@ -30,13 +30,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === 'GET') {
       const m = await mediaUrl(req?.query);
       if (m) {
-        // https://vercel.com/knowledge/how-to-enable-cors?query=access-control-allow-origin
-        res.setHeader('Access-Control-Allow-Origin', '*');
-        res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS');
-        res.setHeader(
-          'Access-Control-Allow-Headers',
-          'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-        );
         res.redirect(307, m);
       } else {
         res.status(404);
